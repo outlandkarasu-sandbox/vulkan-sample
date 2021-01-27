@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/vulkan-sample
+vulkan-sample.so
+vulkan-sample.dylib
+vulkan-sample.dll
+vulkan-sample.a
+vulkan-sample.lib
+vulkan-sample-test-*
+*.exe
+*.o
+*.obj
+*.lst

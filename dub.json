@@ -1,0 +1,12 @@
+{
+	"authors": [
+		"outland.karasu@gmail.com"
+	],
+	"copyright": "Copyright © 2021, outland.karasu@gmail.com",
+	"dependencies": {
+		"erupted": "~>2.1.12"
+	},
+	"description": "A vulkan sample application.",
+	"license": "BSL-1.0",
+	"name": "vulkan-sample"
+}
