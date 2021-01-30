@@ -5,10 +5,12 @@
 	"copyright": "Copyright © 2021, outland.karasu@gmail.com",
 	"dependencies": {
 		"bindbc-sdl": "~>0.19.2",
-		"erupted": "~>2.1.12"
+		"erupted": "~>2.1.12",
+		"karasutk": {
+			"path": "../karasutk"
+		}
 	},
 	"description": "A vulkan sample application.",
 	"license": "BSL-1.0",
-	"name": "vulkan-sample",
-    "versions": ["SDL_2012"]
+	"name": "vulkan-sample"
 }

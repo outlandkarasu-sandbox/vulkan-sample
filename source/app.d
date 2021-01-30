@@ -3,11 +3,6 @@ import std.stdio : writeln, writefln;
 import std.exception : enforce;
 import std.conv : to;
 
-import bindbc.sdl :
-    loadSDL,
-    SDLSupport,
-    unloadSDL;
-
 import erupted :
     loadInstanceLevelFunctions,
     VK_MAKE_VERSION,
@@ -26,26 +21,31 @@ import erupted :
 import erupted.vulkan_lib_loader :
     loadGlobalLevelFunctions;
 
+import karasutk.sdl :
+    duringSDL,
+    EventHandlers,
+    runEventLoop,
+    Window,
+    WindowParameters;
+
 private void enforceVK(VkResult res)
 {
 	enforce(res == VkResult.VK_SUCCESS, res.to!string);
 }
 
-int main()
+void main()
 {
-    switch (loadSDL())
-    {
-    case SDLSupport.noLibrary:
-        writefln("SDL noLibrary");
-        return -1;
-    case SDLSupport.badLibrary:
-        writefln("SDL badLibrary");
-        return -1;
-    default:
-        break;
-    }
-    scope(exit) unloadSDL();
+    duringSDL(&vulkanMain);
+}
 
+void vulkanMain()
+{
+    WindowParameters params = {
+        vulkan: true
+    };
+    auto window = Window.create(params);
+
+    auto extensions = window.vulkanInstanceExtensions;
 
     loadGlobalLevelFunctions();
 
@@ -55,6 +55,8 @@ int main()
     };
     VkInstanceCreateInfo instInfo = {
         pApplicationInfo: &appInfo,
+        enabledExtensionCount: cast(uint) extensions.length,
+        ppEnabledExtensionNames: extensions.ptr,
     };
 
     VkInstance instance;
@@ -80,6 +82,8 @@ int main()
         return properties;
     }).each!writeln;
 
-    return 0;
+    EventHandlers eventHandlers;
+    window.runEventLoop(eventHandlers);
+
 }
 
