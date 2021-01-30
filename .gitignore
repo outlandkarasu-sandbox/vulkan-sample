@@ -13,3 +13,5 @@ vulkan-sample-test-*
 *.o
 *.obj
 *.lst
+*.dylib
+

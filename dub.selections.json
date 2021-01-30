@@ -1,0 +1,8 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"bindbc-loader": "0.3.2",
+		"bindbc-sdl": "0.19.2",
+		"erupted": "2.1.18+v1.2.168"
+	}
+}
