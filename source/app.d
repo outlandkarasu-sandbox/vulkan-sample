@@ -1,4 +1,5 @@
 import std.algorithm : map, each;
+import std.string : toStringz;
 import std.stdio : writeln, writefln;
 import std.exception : enforce;
 import std.conv : to;
@@ -11,10 +12,12 @@ import erupted :
     vkCreateInstance,
     vkDestroyInstance,
     vkEnumeratePhysicalDevices,
+    vkGetPhysicalDeviceFeatures,
     vkGetPhysicalDeviceProperties,
     VkInstance,
     VkInstanceCreateInfo,
     VkPhysicalDevice,
+    VkPhysicalDeviceFeatures,
     VkPhysicalDeviceProperties,
     VkResult;
 
@@ -45,14 +48,14 @@ void vulkanMain()
     };
     auto window = Window.create(params);
 
-    auto extensions = window.vulkanInstanceExtensions;
-
     loadGlobalLevelFunctions();
 
     VkApplicationInfo appInfo = {
         pApplicationName: "Vulkan sample",
         apiVersion: VK_MAKE_VERSION(1, 0, 2),
     };
+
+    auto extensions = window.vulkanInstanceExtensions;
     VkInstanceCreateInfo instInfo = {
         pApplicationInfo: &appInfo,
         enabledExtensionCount: cast(uint) extensions.length,
@@ -71,19 +74,26 @@ void vulkanMain()
         }
     }
 
+    // enumerate devices.
     uint numPhysDevices;
     enforceVK(vkEnumeratePhysicalDevices(instance, &numPhysDevices, null));
-
     auto physDevices = new VkPhysicalDevice[](numPhysDevices);
     enforceVK(vkEnumeratePhysicalDevices(instance, &numPhysDevices, physDevices.ptr));
-    physDevices.map!((d) {
+
+    enforce(physDevices.length > 0, "Device not found.");
+
+    foreach (device; physDevices) {
         VkPhysicalDeviceProperties properties;
-        vkGetPhysicalDeviceProperties(d, &properties);
-        return properties;
-    }).each!writeln;
+        device.vkGetPhysicalDeviceProperties(&properties);
+        properties.writeln;
+
+        VkPhysicalDeviceFeatures features;
+        device.vkGetPhysicalDeviceFeatures(&features);
+        features.writeln;
+    }
+
 
     EventHandlers eventHandlers;
     window.runEventLoop(eventHandlers);
-
 }
 
